@@ -6,12 +6,18 @@ import { PaginacionDto } from 'src/common/dtos/paginacion.dto';
 import { Auth, GetUser } from '../auth/decorators';
 import { RolesValidos } from '../auth/interfaces/roles-validos';
 import { User } from '../auth/entities/user.entity';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Producto } from './entities/producto.entity';
 
+@ApiTags('Productos')
 @Controller('productos')
 export class ProductosController {
   constructor(private readonly productosService: ProductosService) {}
 
   @Post()
+  @ApiResponse({status: 201 , description: 'Producto ha sido creado', type: Producto})
+  @ApiResponse({status: 400 , description: 'Bad request'})
+  @ApiResponse({status: 403 , description: 'Token no válido'})
   @Auth(RolesValidos.admin)
   create(
     @Body() createProductoDto: CreateProductoDto,
